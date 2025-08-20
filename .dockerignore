@@ -1,0 +1,6 @@
+.git
+.vscode
+node_modules
+.env.local
+npm-debug.log*
+README.md

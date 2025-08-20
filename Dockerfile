@@ -1,4 +1,4 @@
-FROM oven/bun:latest
+FROM oven/bun:canary-alpine as builder
 
 WORKDIR /app
 
@@ -9,8 +9,15 @@ COPY . .
 
 RUN bun run build
 
+FROM oven/bun:canary-alpine as runner
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY --from=builder /app/public ./public 
+
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static 
+
 EXPOSE 3000
 
-CMD ["bun", "run", "start"]
-
-
+CMD ["bun", "server.js"]
