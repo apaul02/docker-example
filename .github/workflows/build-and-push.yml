@@ -23,4 +23,4 @@ jobs:
           context: .
           target: runner
           push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/docker-try:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/docker-try:latest
