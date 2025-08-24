@@ -24,3 +24,22 @@ jobs:
           target: runner
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/docker-try:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY}}
+
+      - name: Deploy to Cloud Run 
+        uses: google-github-actions/deploy-cloud-run@v2
+        with:
+          service: my-nextjs-app
+          region: us-central1
+          image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/docker-try:latest
+          env_vars: |
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
